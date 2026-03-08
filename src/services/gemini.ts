@@ -107,11 +107,13 @@ export async function generateFlashcards(content: string) {
   return JSON.parse(response.text || "[]");
 }
 
-export async function generateWorksheet(content: string) {
+export async function generateWorksheet(content: string, customInstructions?: string) {
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: `Based on the following study material, generate a comprehensive worksheet with 5-10 problems. 
     The problems should be open-ended or multi-step questions that require thinking, not just simple multiple choice.
+    
+    ${customInstructions ? `USER CUSTOM INSTRUCTIONS: ${customInstructions}` : ""}
     
     IMPORTANT: For any mathematical symbols, formulas, or special characters, use standard LaTeX notation with $ for inline math and $$ for block math. 
     Do NOT use custom codes like {sqrt}.

@@ -18,6 +18,7 @@ export default function App() {
   const [quizInstructions, setQuizInstructions] = useState("");
   const [flashcards, setFlashcards] = useState<any[] | null>(null);
   const [worksheetProblems, setWorksheetProblems] = useState<any[] | null>(null);
+  const [worksheetInstructions, setWorksheetInstructions] = useState("");
   
   const [isProcessing, setIsProcessing] = useState(false);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
@@ -66,7 +67,7 @@ export default function App() {
     if (!notes) return;
     setIsGeneratingWorksheet(true);
     try {
-      const problems = await generateWorksheet(notes);
+      const problems = await generateWorksheet(notes, worksheetInstructions);
       setWorksheetProblems(problems);
       setActiveTab("worksheet");
     } catch (error) {
@@ -305,6 +306,17 @@ export default function App() {
                             <p className="text-zinc-500 text-sm mb-6">
                               Create a brand new worksheet based on your study materials.
                             </p>
+                            
+                            <div className="mb-6">
+                              <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Custom Focus (Optional)</label>
+                              <textarea
+                                value={worksheetInstructions}
+                                onChange={(e) => setWorksheetInstructions(e.target.value)}
+                                placeholder="e.g., Focus on the math problems, emphasize the historical dates, or make it more challenging..."
+                                className="w-full h-24 p-4 bg-zinc-50 border border-zinc-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm text-zinc-700 resize-none"
+                              />
+                            </div>
+
                             <button
                               onClick={handleGenerateWorksheet}
                               className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all"
