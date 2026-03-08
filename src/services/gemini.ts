@@ -1,6 +1,25 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY!;
+const getApiKey = () => {
+  // 1. Try Vite environment variable (standard for Netlify/Vercel)
+  if (import.meta.env.VITE_GEMINI_API_KEY) {
+    return import.meta.env.VITE_GEMINI_API_KEY;
+  }
+  
+  // 2. Try process.env (for AI Studio preview and Node environments)
+  // We use a try-catch or check typeof to prevent "process is not defined" errors in browser
+  try {
+    if (typeof process !== 'undefined' && process.env && process.env.GEMINI_API_KEY) {
+      return process.env.GEMINI_API_KEY;
+    }
+  } catch (e) {
+    // process might not be defined
+  }
+
+  return "";
+};
+
+const apiKey = getApiKey();
 const ai = new GoogleGenAI({ apiKey });
 
 export async function processNotes(notes: string) {
