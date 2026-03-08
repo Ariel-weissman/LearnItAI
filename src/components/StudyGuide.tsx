@@ -36,11 +36,16 @@ export default function StudyGuide({ content, onTextSelect }: StudyGuideProps) {
     }
   };
 
-  const handleMouseUp = () => {
-    const selection = window.getSelection()?.toString();
-    if (selection && selection.trim().length > 0) {
-      onTextSelect(selection.trim());
-    }
+  const handlePointerUp = () => {
+    // Small timeout to allow the selection to be finalized on some mobile browsers
+    setTimeout(() => {
+      const selection = window.getSelection()?.toString();
+      if (selection && selection.trim().length > 0) {
+        onTextSelect(selection.trim());
+      } else {
+        onTextSelect("");
+      }
+    }, 10);
   };
 
   return (
@@ -62,8 +67,8 @@ export default function StudyGuide({ content, onTextSelect }: StudyGuideProps) {
       </div>
 
       <div 
-        onMouseUp={handleMouseUp}
-        className="prose prose-indigo max-w-none selection:bg-indigo-100 selection:text-indigo-900"
+        onPointerUp={handlePointerUp}
+        className="prose prose-indigo max-w-none selection:bg-indigo-100 selection:text-indigo-900 touch-manipulation"
       >
         <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
           {content}
